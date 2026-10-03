@@ -1,0 +1,105 @@
+{
+  "model_name": "flats_price_model",
+  "model_version": "4",
+  "source": "mle-project-sprint-2, MLflow run final_model",
+  "trained_at": "2026-10-03T08:00:30+00:00",
+  "library_versions": {
+    "scikit-learn": "1.7.2",
+    "catboost": "1.2.10"
+  },
+  "input_features": [
+    "floor",
+    "kitchen_area",
+    "living_area",
+    "rooms",
+    "is_apartment",
+    "studio",
+    "total_area",
+    "build_year",
+    "building_type_int",
+    "latitude",
+    "longitude",
+    "ceiling_height",
+    "flats_count",
+    "floors_total",
+    "has_elevator"
+  ],
+  "selected_features": [
+    "num__dist_to_center",
+    "num__volume",
+    "num__latitude",
+    "num__longitude",
+    "poly__total_area rooms",
+    "poly__total_area ceiling_height",
+    "poly__total_area kitchen_area",
+    "bins__latitude",
+    "poly__rooms ceiling_height",
+    "bins__build_year",
+    "num__floor"
+  ],
+  "params": {
+    "loss_function": "RMSE",
+    "iterations": 1200,
+    "learning_rate": 0.02169924677745687,
+    "depth": 9,
+    "l2_leaf_reg": 1.0778717335941141,
+    "min_data_in_leaf": 38,
+    "verbose": 0,
+    "thread_count": -1,
+    "random_seed": 42
+  },
+  "n_train": 66301,
+  "n_test": 16576,
+  "test_metrics": {
+    "mae": 1641098.3952610411,
+    "rmse": 2031685.3155212854,
+    "mape": 0.15934683178893216,
+    "r2": 0.6585814269418053
+  },
+  "train_ranges": {
+    "floor": {
+      "min": 1.0,
+      "max": 42.0
+    },
+    "kitchen_area": {
+      "min": 1.5,
+      "max": 15.84000015258789
+    },
+    "living_area": {
+      "min": 0.0,
+      "max": 69.0
+    },
+    "rooms": {
+      "min": 1.0,
+      "max": 5.0
+    },
+    "total_area": {
+      "min": 11.699999809265137,
+      "max": 120.0
+    },
+    "build_year": {
+      "min": 1928.0,
+      "max": 2023.0
+    },
+    "latitude": {
+      "min": 55.21146011352539,
+      "max": 56.00934600830078
+    },
+    "longitude": {
+      "min": 36.86437225341797,
+      "max": 37.9464111328125
+    },
+    "ceiling_height": {
+      "min": 2.5,
+      "max": 2.880000114440918
+    },
+    "flats_count": {
+      "min": 1.0,
+      "max": 4455.0
+    },
+    "floors_total": {
+      "min": 1.0,
+      "max": 99.0
+    }
+  }
+}

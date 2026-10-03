@@ -1,0 +1,52 @@
+# Микросервис с моделью + система мониторинга (Prometheus и Grafana).
+# Запуск из директории services/:  docker compose up --build --detach
+# Переменные ${...} подставляются из services/.env.
+
+services:
+  # FastAPI-микросервис с моделью
+  ml-service:
+    build:
+      context: .
+      dockerfile: Dockerfile_ml_service
+    image: price_service:1.0
+    env_file: .env
+    ports:
+      # хост:контейнер - внутри контейнера сервис всегда слушает 8081
+      - "${APP_PORT}:8081"
+    restart: unless-stopped
+
+  # сбор метрик: раз в 15 секунд забирает /metrics у ml-service
+  prometheus:
+    image: prom/prometheus:v3.5.5
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+    ports:
+      - "${PROMETHEUS_PORT}:9090"
+    volumes:
+      # собственный конфиг подключаем томом
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - ml-service
+    restart: unless-stopped
+
+  # дашборды
+  grafana:
+    image: grafana/grafana:12.4.12
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASS}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "${GRAFANA_PORT}:3000"
+    volumes:
+      # источник данных Prometheus подключается автоматически (uid "prometheus")
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+# Постоянных томов для данных Prometheus и Grafana нет намеренно: после
+# docker compose down каждый запуск начинается с чистой Grafana (логин и пароль
+# из .env, источник данных с id 1) и не подхватывает тома других проектов
+# с такой же папкой services. Дашборд хранится в dashboard.json.

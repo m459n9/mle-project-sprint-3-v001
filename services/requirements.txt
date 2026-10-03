@@ -1,0 +1,24 @@
+# Зависимости FastAPI-микросервиса (этап 1 и Docker-образ),
+# скрипта симуляции нагрузки и fix_datasource_uid.py.
+# Все версии ставятся из готовых wheel-пакетов на Python 3.10–3.13.
+
+# веб-сервис
+fastapi==0.142.2
+uvicorn==0.54.0
+pydantic==2.13.5
+
+# модель: sklearn-пайплайн с CatBoost внутри
+catboost==1.2.10
+scikit-learn==1.7.2
+scipy==1.15.3
+numpy==2.2.6
+pandas==2.3.3
+joblib==1.5.2
+
+# мониторинг
+prometheus-client==0.26.0
+prometheus-fastapi-instrumentator==8.1.0
+
+# скрипт нагрузки и fix_datasource_uid.py
+requests==2.34.2
+python-dotenv==1.2.4

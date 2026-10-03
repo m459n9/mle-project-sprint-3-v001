@@ -1,0 +1,28 @@
+# Образ FastAPI-микросервиса с моделью оценки стоимости квартир.
+# Сборка из директории services/:
+#   docker image build . --file Dockerfile_ml_service --tag price_service:1.0
+FROM python:3.11-slim
+
+# не писать .pyc и сразу выводить логи в stdout контейнера
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# сначала зависимости: этот слой кэшируется и не пересобирается при правках кода
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY ml_service ./ml_service
+COPY models ./models
+
+# внутри контейнера сервис всегда слушает 8081, наружу порт пробрасывается
+# при запуске (--publish / ports в docker-compose.yaml), его можно поменять в .env
+EXPOSE 8081
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8081/')" || exit 1
+
+# sh -c - чтобы подставить LOG_LEVEL из services/.env; exec - чтобы uvicorn
+# стал PID 1 и корректно получал сигнал остановки от docker stop
+CMD ["sh", "-c", "exec uvicorn ml_service.main:app --host 0.0.0.0 --port 8081 --log-level ${LOG_LEVEL:-info}"]

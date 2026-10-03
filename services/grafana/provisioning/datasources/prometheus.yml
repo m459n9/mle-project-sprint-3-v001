@@ -1,0 +1,18 @@
+# Источник данных Prometheus подключается при старте Grafana автоматически.
+# Фиксированный uid "prometheus" прописан в панелях dashboard.json, поэтому
+# дашборд импортируется без ручной настройки. fix_datasource_uid.py тоже
+# работает: этот источник получает id 1 и он подставит тот же uid.
+apiVersion: 1
+
+datasources:
+  - name: prometheus
+    uid: prometheus
+    type: prometheus
+    access: proxy
+    # имя сервиса из docker-compose.yaml
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      httpMethod: POST
+      timeInterval: 15s

@@ -1,0 +1,19 @@
+# Конфиг Prometheus: подключается томом в docker-compose.yaml.
+global:
+  # как часто забирать метрики и сколько ждать ответа
+  scrape_interval: 15s
+  scrape_timeout: 10s
+
+scrape_configs:
+  # FastAPI-микросервис: метрики prometheus_fastapi_instrumentator и свои (prometheus_client)
+  - job_name: 'ml-service'
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      # имя сервиса из docker-compose.yaml и порт внутри контейнера (не зависит от APP_PORT)
+      - targets: ['ml-service:8081']
+
+  # сам Prometheus - чтобы видеть, что система мониторинга жива
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']

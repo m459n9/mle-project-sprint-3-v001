@@ -158,3 +158,12 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+# данные для обучения в репозиторий не кладём (модель уже в services/models)
+*.csv
+
+# macOS
+.DS_Store
+
+# служебные файлы CatBoost при обучении
+catboost_info/

@@ -1,0 +1,7 @@
+# в образ попадают только requirements.txt, ml_service и models
+**/__pycache__
+**/*.pyc
+.env
+prometheus
+grafana
+docker-compose.yaml
